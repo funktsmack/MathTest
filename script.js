@@ -60,6 +60,31 @@ const scoreLabel = document.getElementById('score-label');
 const streakLabel = document.getElementById('streak-label');
 const tableLabel = document.getElementById('table-label');
 
+// Add text size change handler
+const textSizeSelect = document.getElementById('textSize');
+textSizeSelect.addEventListener('change', (e) => {
+    const container = document.querySelector('.container');
+    // Remove existing text size classes
+    container.classList.remove('text-size-large', 'text-size-x-large');
+    // Add new text size class if not normal
+    if (e.target.value !== 'normal') {
+        container.classList.add(`text-size-${e.target.value}`);
+    }
+    // Store preference
+    localStorage.setItem('preferredTextSize', e.target.value);
+});
+
+// Load saved text size preference
+document.addEventListener('DOMContentLoaded', () => {
+    const savedTextSize = localStorage.getItem('preferredTextSize');
+    if (savedTextSize) {
+        textSizeSelect.value = savedTextSize;
+        if (savedTextSize !== 'normal') {
+            document.querySelector('.container').classList.add(`text-size-${savedTextSize}`);
+        }
+    }
+});
+
 function createCelebrationAnimation() {
     const t = translations[currentLanguage];
     const container = document.createElement('div');
