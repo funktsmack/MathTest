@@ -1,0 +1,236 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.container {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+}
+
+h1 {
+    color: #ff6b6b;
+    margin-bottom: 2rem;
+    font-size: 3.5rem;
+}
+
+.score-container {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    color: #4a90e2;
+}
+
+.table-selector {
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    color: #2d3436;
+}
+
+.table-selector label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.table-selector select {
+    font-size: 1.8rem;
+    padding: 0.5rem;
+    border: 3px solid #4a90e2;
+    border-radius: 12px;
+    background-color: white;
+    cursor: pointer;
+    min-width: 200px;
+}
+
+.question-container {
+    background-color: #f8f9fa;
+    padding: 2rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+}
+
+#question {
+    font-size: 3.5rem;
+    color: #2d3436;
+}
+
+.answer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    width: 100%;
+}
+
+input[type="number"] {
+    width: 100%;
+    max-width: 400px;
+    padding: 1rem;
+    font-size: 2rem;
+    border: 3px solid #4a90e2;
+    border-radius: 12px;
+    text-align: center;
+}
+
+button {
+    min-width: 200px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-size: 1.8rem;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+button:hover {
+    transform: scale(1.05);
+    background-color: #357abd;
+}
+
+.feedback {
+    margin: 1.5rem 0;
+    font-size: 2rem;
+    min-height: 3rem;
+}
+
+.correct {
+    color: #2ecc71;
+}
+
+.incorrect {
+    color: #e74c3c;
+}
+
+#next {
+    background-color: #2ecc71;
+}
+
+#next:hover {
+    background-color: #27ae60;
+}
+
+.milestone {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.95);
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    animation: popIn 0.5s ease-out forwards;
+    z-index: 1001;
+}
+
+@keyframes popIn {
+    0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+}
+
+.milestone h2 {
+    color: #ff6b6b;
+    font-size: 2em;
+    margin: 0 0 10px 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.milestone p {
+    margin: 5px 0;
+    font-size: 1.2em;
+    color: #333;
+}
+
+.language-selector {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.language-selector select {
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: white;
+    font-size: 14px;
+}
+
+.language-selector label {
+    font-size: 14px;
+    color: #666;
+}
+
+.celebration-character {
+    position: fixed;
+    font-size: 100px;
+    animation: explode 0.5s ease-out forwards;
+    z-index: 1000;
+}
+
+@keyframes explode {
+    0% {
+        transform: scale(0.5) rotate(0deg);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.5) rotate(180deg);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1) rotate(360deg);
+        opacity: 1;
+    }
+}
+
+@keyframes moveAcross {
+    0% {
+        left: -100px;
+        transform: translateY(0) rotate(0deg) scale(1);
+    }
+    50% {
+        transform: translateY(-50px) rotate(180deg) scale(1.2);
+    }
+    100% {
+        left: calc(100vw + 100px);
+        transform: translateY(0) rotate(360deg) scale(1);
+    }
+}
+
+.celebration-container {
+    position: fixed;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 200px;
+    overflow: visible;
+    z-index: 1000;
+} 

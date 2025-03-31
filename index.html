@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fun Times Tables Practice</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="language-selector">
+            <label for="language">Language / Sprache:</label>
+            <select id="language">
+                <option value="en">English</option>
+                <option value="de">Deutsch</option>
+            </select>
+        </div>
+        <h1 id="title">🌟 Times Tables Adventure 🌟</h1>
+        <div class="score-container">
+            <p id="score-label">Score: <span id="score">0</span></p>
+            <p id="streak-label">Streak: <span id="streak">0</span></p>
+        </div>
+        <div class="table-selector">
+            <label for="timesTable" id="table-label">Practice times table:</label>
+            <select id="timesTable">
+                <option value="0" id="all-tables">All (1-10)</option>
+                <option value="1" id="table-1">1 times table</option>
+                <option value="2" id="table-2">2 times table</option>
+                <option value="3" id="table-3">3 times table</option>
+                <option value="4" id="table-4">4 times table</option>
+                <option value="5" id="table-5">5 times table</option>
+                <option value="6" id="table-6">6 times table</option>
+                <option value="7" id="table-7">7 times table</option>
+                <option value="8" id="table-8">8 times table</option>
+                <option value="9" id="table-9">9 times table</option>
+                <option value="10" id="table-10">10 times table</option>
+            </select>
+        </div>
+        <div class="question-container">
+            <p id="question">Ready to start?</p>
+        </div>
+        <div class="answer-container">
+            <input type="number" id="answer" placeholder="Type your answer here" min="0">
+            <button id="submit">Submit</button>
+        </div>
+        <div class="feedback" id="feedback"></div>
+        <button id="next" style="display: none;">Next Question</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> 
