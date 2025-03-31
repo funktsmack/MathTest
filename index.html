@@ -2,9 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#4CAF50">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Math Tool">
     <title>Fun Times Tables Practice</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192x192.png">
 </head>
 <body>
     <div class="container">
@@ -40,7 +46,7 @@
             <p id="question">Ready to start?</p>
         </div>
         <div class="answer-container">
-            <input type="number" id="answer" placeholder="Type your answer here" min="0">
+            <input type="number" id="answer" placeholder="Type your answer here" min="0" inputmode="numeric">
             <button id="submit">Submit</button>
         </div>
         <div class="feedback" id="feedback"></div>
