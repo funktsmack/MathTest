@@ -6,7 +6,7 @@
 }
 
 body {
-    font-family: 'Comic Sans MS', cursive, sans-serif;
+    font-family: 'Fredoka', 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif;
     background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
     min-height: 100vh;
     display: flex;
@@ -28,6 +28,10 @@ body {
     backdrop-filter: blur(10px);
 }
 
+h1, button, .score-container, .question-container, label {
+    font-weight: 600;
+}
+
 h1 {
     color: #ff6b6b;
     text-align: center;
@@ -46,7 +50,6 @@ h1 {
     flex-wrap: wrap;
     gap: 1rem;
     color: #4a90e2;
-    font-weight: bold;
 }
 
 .table-selector {
@@ -58,7 +61,6 @@ label {
     margin-bottom: 0.5rem;
     color: #2d3436;
     font-size: 0.9rem;
-    font-weight: bold;
 }
 
 select, input {
@@ -91,7 +93,6 @@ select:focus, input:focus {
     min-height: 3rem;
     line-height: 1.2;
     color: #2d3436;
-    font-weight: bold;
 }
 
 .answer-container {
