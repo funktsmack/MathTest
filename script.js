@@ -4,6 +4,9 @@ const translations = {
         score: "Score",
         streak: "Streak",
         tableLabel: "Practice times table:",
+        modeLabel: "Practice mode:",
+        multiplication: "Multiplication",
+        division: "Division",
         allTables: "All (1-10)",
         table: "times table",
         readyToStart: "Ready to start?",
@@ -23,6 +26,9 @@ const translations = {
         score: "Punktzahl",
         streak: "Serie",
         tableLabel: "Übe das Einmaleins:",
+        modeLabel: "Übungsmodus:",
+        multiplication: "Multiplikation",
+        division: "Division",
         allTables: "Alle (1-10)",
         table: "er Einmaleins",
         readyToStart: "Bereit zum Starten?",
@@ -40,6 +46,7 @@ const translations = {
 };
 
 let currentLanguage = 'en';
+let currentMode = 'multiplication';
 let score = 0;
 let streak = 0;
 let maxStreak = 0;
@@ -59,6 +66,8 @@ const title = document.getElementById('title');
 const scoreLabel = document.getElementById('score-label');
 const streakLabel = document.getElementById('streak-label');
 const tableLabel = document.getElementById('table-label');
+const modeLabel = document.getElementById('mode-label');
+const practiceModeSelect = document.getElementById('practiceMode');
 
 // Add text size change handler
 const textSizeSelect = document.getElementById('textSize');
@@ -130,6 +139,11 @@ function updateLanguage() {
     scoreLabel.textContent = `${t.score}: ${score}`;
     streakLabel.textContent = `${t.streak}: ${streak}`;
     tableLabel.textContent = t.tableLabel;
+    modeLabel.textContent = t.modeLabel;
+    
+    // Update mode options
+    practiceModeSelect.options[0].text = t.multiplication;
+    practiceModeSelect.options[1].text = t.division;
     
     // Update times table options
     const timesTable = document.getElementById('timesTable');
@@ -146,26 +160,54 @@ function updateLanguage() {
 function generateQuestion() {
     const selectedTable = parseInt(timesTableSelect.value);
     
-    if (selectedTable === 0) {
-        // Random question from 1-10
-        const num1 = Math.floor(Math.random() * 10) + 1;
-        const num2 = Math.floor(Math.random() * 10) + 1;
-        currentQuestion = {
-            num1,
-            num2,
-            answer: num1 * num2
-        };
-        questionElement.textContent = `${currentQuestion.num1} · ${currentQuestion.num2} = ?`;
+    if (currentMode === 'multiplication') {
+        // Multiplication mode (existing logic)
+        if (selectedTable === 0) {
+            // Random question from 1-10
+            const num1 = Math.floor(Math.random() * 10) + 1;
+            const num2 = Math.floor(Math.random() * 10) + 1;
+            currentQuestion = {
+                num1,
+                num2,
+                answer: num1 * num2
+            };
+            questionElement.textContent = `${currentQuestion.num1} · ${currentQuestion.num2} = ?`;
+        } else {
+            // Specific times table
+            const num2 = selectedTable;
+            const num1 = Math.floor(Math.random() * 10) + 1;
+            currentQuestion = {
+                num1,
+                num2,
+                answer: num1 * num2
+            };
+            questionElement.textContent = `${currentQuestion.num1} · ${currentQuestion.num2} = ?`;
+        }
     } else {
-        // Specific times table
-        const num2 = selectedTable;
-        const num1 = Math.floor(Math.random() * 10) + 1;
-        currentQuestion = {
-            num1,
-            num2,
-            answer: num1 * num2
-        };
-        questionElement.textContent = `${currentQuestion.num1} · ${currentQuestion.num2} = ?`;
+        // Division mode
+        if (selectedTable === 0) {
+            // Random division question from 1-10
+            const divisor = Math.floor(Math.random() * 10) + 1;
+            const quotient = Math.floor(Math.random() * 10) + 1;
+            const dividend = divisor * quotient;
+            currentQuestion = {
+                dividend,
+                divisor,
+                answer: quotient
+            };
+            questionElement.textContent = `${currentQuestion.dividend} ÷ ${currentQuestion.divisor} = ?`;
+        } else {
+            // Specific division table (divide by selected number)
+            const divisor = selectedTable;
+            const quotient = Math.floor(Math.random() * 10) + 1;
+            const dividend = divisor * quotient;
+            currentQuestion = {
+                dividend,
+                divisor,
+                answer: quotient
+            };
+            questionElement.textContent = `${currentQuestion.dividend} ÷ ${currentQuestion.divisor} = ?`;
+        }
     }
 }
 
@@ -236,6 +278,14 @@ answerInput.addEventListener('keypress', (e) => {
 
 // When times table selection changes, generate a new question
 timesTableSelect.addEventListener('change', () => {
+    if (submitButton.style.display !== 'none') {
+        generateQuestion();
+    }
+});
+
+// When practice mode changes, generate a new question
+practiceModeSelect.addEventListener('change', (e) => {
+    currentMode = e.target.value;
     if (submitButton.style.display !== 'none') {
         generateQuestion();
     }
