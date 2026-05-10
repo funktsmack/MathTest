@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#4CAF50">
+    <meta name="theme-color" content="#4a90e2">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Math Tool">
-    <title>Fun Times Tables Practice</title>
+    <title>Math Adventure</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
@@ -17,61 +17,150 @@
 </head>
 <body>
     <div class="container">
+
+        <!-- Top toolbar -->
         <div class="top-controls">
-            <div class="language-selector">
-                <label for="language">Language / Sprache:</label>
+            <div class="control-pill">
+                <label for="language" aria-label="Language">🌍</label>
                 <select id="language">
-                    <option value="en">English</option>
-                    <option value="de">Deutsch</option>
+                    <option value="en">EN</option>
+                    <option value="de">DE</option>
+                    <option value="fr">FR</option>
+                    <option value="es">ES</option>
                 </select>
             </div>
-            <div class="text-size-selector">
-                <label for="textSize">Text Size:</label>
+            <div class="control-pill">
+                <label for="textSize" aria-label="Text size">🔡</label>
                 <select id="textSize">
-                    <option value="normal">Normal</option>
-                    <option value="large">Large</option>
-                    <option value="x-large">Extra Large</option>
+                    <option value="normal">Aa</option>
+                    <option value="large">A+</option>
+                    <option value="x-large">A++</option>
                 </select>
             </div>
+            <button id="darkModeToggle" class="icon-btn" aria-label="Toggle dark mode">🌙</button>
+            <button id="soundToggle"    class="icon-btn" aria-label="Toggle sound">🔊</button>
+            <button id="statsBtn"       class="icon-btn" aria-label="View high scores">🏆</button>
         </div>
-        <h1 id="title">🌟 Times Tables Adventure 🌟</h1>
-        <div class="score-container">
-            <p id="score-label">Score: <span id="score">0</span></p>
-            <p id="streak-label">Streak: <span id="streak">0</span></p>
+
+        <h1 id="title">🌟 Math Adventure 🌟</h1>
+
+        <!-- Live stats bar -->
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-label" id="score-label">Score</div>
+                <div class="stat-value" id="score">0</div>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+                <div class="stat-label" id="streak-label">Streak</div>
+                <div class="stat-value" id="streak">0</div>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+                <div class="stat-label" id="accuracy-label">Accuracy</div>
+                <div class="stat-value" id="accuracy">—</div>
+            </div>
+            <div class="stat-divider" id="timer-divider" style="display:none"></div>
+            <div class="stat-item"    id="timer-stat"    style="display:none">
+                <div class="stat-label" id="timer-label">Time</div>
+                <div class="stat-value" id="timer">60</div>
+            </div>
         </div>
-        <div class="mode-selector">
-            <label for="practiceMode" id="mode-label">Practice mode:</label>
-            <select id="practiceMode">
-                <option value="multiplication" id="mode-multiplication">Multiplication</option>
-                <option value="division" id="mode-division">Division</option>
-            </select>
+
+        <!-- Settings panel -->
+        <div class="settings-panel">
+            <div class="settings-row">
+                <div class="setting-group">
+                    <label for="practiceMode" id="mode-label">Mode</label>
+                    <select id="practiceMode">
+                        <option value="multiplication">× Multiply</option>
+                        <option value="division">÷ Divide</option>
+                        <option value="addition">+ Add</option>
+                        <option value="subtraction">− Subtract</option>
+                        <option value="mixed">🎲 Mix</option>
+                    </select>
+                </div>
+                <div class="setting-group">
+                    <label for="timesTable" id="table-label">Table</label>
+                    <select id="timesTable">
+                        <option value="0">All</option>
+                    </select>
+                </div>
+                <div class="setting-group">
+                    <label for="difficulty" id="diff-label">Range</label>
+                    <select id="difficulty">
+                        <option value="easy">1–5</option>
+                        <option value="medium" selected>1–10</option>
+                        <option value="hard">1–12</option>
+                    </select>
+                </div>
+            </div>
+            <div class="settings-row">
+                <div class="setting-group">
+                    <label for="inputMode" id="input-label">Input</label>
+                    <select id="inputMode">
+                        <option value="type">⌨️ Type</option>
+                        <option value="choice">🔘 Choice</option>
+                    </select>
+                </div>
+                <div class="setting-group">
+                    <label for="timedMode" id="timed-label">Timed</label>
+                    <select id="timedMode">
+                        <option value="0">Off</option>
+                        <option value="30">30 s</option>
+                        <option value="60">60 s</option>
+                        <option value="120">2 min</option>
+                    </select>
+                </div>
+            </div>
         </div>
-        <div class="table-selector">
-            <label for="timesTable" id="table-label">Practice times table:</label>
-            <select id="timesTable">
-                <option value="0" id="all-tables">All (1-10)</option>
-                <option value="1" id="table-1">1 times table</option>
-                <option value="2" id="table-2">2 times table</option>
-                <option value="3" id="table-3">3 times table</option>
-                <option value="4" id="table-4">4 times table</option>
-                <option value="5" id="table-5">5 times table</option>
-                <option value="6" id="table-6">6 times table</option>
-                <option value="7" id="table-7">7 times table</option>
-                <option value="8" id="table-8">8 times table</option>
-                <option value="9" id="table-9">9 times table</option>
-                <option value="10" id="table-10">10 times table</option>
-            </select>
+
+        <!-- Timer progress bar -->
+        <div class="timer-bar-wrap" id="timerBarWrap" style="display:none">
+            <div class="timer-bar" id="timerBar"></div>
         </div>
+
+        <!-- Question -->
         <div class="question-container">
-            <p id="question">Ready to start?</p>
+            <p id="question">Ready to start? 🚀</p>
         </div>
-        <div class="answer-container">
-            <input type="number" id="answer" placeholder="Type your answer here" min="0" inputmode="numeric">
-            <button id="submit">Submit</button>
+
+        <!-- Type-answer input -->
+        <div class="answer-container" id="typeAnswerContainer">
+            <input type="number" id="answer" placeholder="?" min="0" inputmode="numeric" autocomplete="off">
+            <button id="submit" class="btn-primary">Submit ✓</button>
         </div>
+
+        <!-- Multiple-choice buttons -->
+        <div class="choices-container" id="choicesContainer" style="display:none">
+            <div class="choices-grid" id="choicesGrid"></div>
+        </div>
+
         <div class="feedback" id="feedback"></div>
-        <button id="next" style="display: none;">Next Question</button>
+        <button id="next" class="btn-success" style="display:none">Next →</button>
+
+        <!-- High-scores panel (toggled by 🏆 button) -->
+        <div class="highscores-panel" id="highscoresPanel" style="display:none">
+            <h3 id="hs-title">🏆 Best Scores</h3>
+            <div class="hs-grid">
+                <div class="hs-item">
+                    <div class="hs-label" id="hs-score-label">Best Score</div>
+                    <div class="hs-value" id="hs-score">0</div>
+                </div>
+                <div class="hs-item">
+                    <div class="hs-label" id="hs-streak-label">Best Streak</div>
+                    <div class="hs-value" id="hs-streak">0</div>
+                </div>
+                <div class="hs-item">
+                    <div class="hs-label" id="hs-accuracy-label">Best Accuracy</div>
+                    <div class="hs-value" id="hs-accuracy">—</div>
+                </div>
+            </div>
+            <button id="resetStats" class="btn-danger">Reset Stats</button>
+        </div>
+
     </div>
+
     <script src="script.js"></script>
 </body>
-</html> 
+</html>
