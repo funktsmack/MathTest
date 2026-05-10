@@ -127,7 +127,7 @@ let totalAttempts    = 0;
 let totalCorrect     = 0;
 let lastMilestone    = 0;
 let currentQuestion  = null;
-let lastQuestionDisplay = null;
+let recentQuestions  = [];   // rolling history to prevent repeats
 let timerInterval    = null;
 let timerSecondsLeft = 0;
 let timerTotal       = 0;
@@ -245,6 +245,14 @@ function pickRandom(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
 }
 
+// Adaptive difficulty: start with numbers 1–4, expand by 1 for every 3
+// correct answers until reaching the user's chosen range ceiling.
+function getAdaptiveMax(range) {
+    const base    = Math.min(4, range);
+    const expanded = base + Math.floor(totalCorrect / 3);
+    return Math.min(range, expanded);
+}
+
 // ============================================================
 // QUESTION GENERATION
 // ============================================================
@@ -256,24 +264,26 @@ function getEffectiveMode() {
 }
 
 function buildQuestion(mode, selectedTable, range) {
+    const aMax = getAdaptiveMax(range);   // grows with totalCorrect
+
     if (mode === 'multiplication') {
-        const a = rand(range);
-        const b = selectedTable === 0 ? rand(range) : selectedTable;
+        const a = rand(aMax);
+        const b = selectedTable === 0 ? rand(aMax) : selectedTable;
         return { answer: a * b, display: `${a} × ${b} = ?` };
     }
     if (mode === 'division') {
-        const divisor  = selectedTable === 0 ? rand(range) : selectedTable;
-        const quotient = rand(range);
+        const divisor  = selectedTable === 0 ? rand(aMax) : selectedTable;
+        const quotient = rand(aMax);
         return { answer: quotient, display: `${divisor * quotient} ÷ ${divisor} = ?` };
     }
     if (mode === 'addition') {
-        const a = rand(range);
-        const b = selectedTable === 0 ? rand(range) : selectedTable;
+        const a = rand(aMax);
+        const b = selectedTable === 0 ? rand(aMax) : selectedTable;
         return { answer: a + b, display: `${a} + ${b} = ?` };
     }
     // subtraction — ensure non-negative result
-    const b  = selectedTable === 0 ? rand(range) : selectedTable;
-    const a  = b + rand(range);   // a >= b+1, so result >= 1
+    const b = selectedTable === 0 ? rand(aMax) : selectedTable;
+    const a = b + rand(aMax);   // a >= b+1, so result >= 1
     return { answer: a - b, display: `${a} − ${b} = ?` };
 }
 
@@ -282,14 +292,25 @@ function generateQuestion() {
     const range         = getRange();
     const mode          = getEffectiveMode();
 
+    // Pool size = how many distinct questions currently exist.
+    // For "All tables" both operands vary; for a specific table only one varies.
+    const aMax     = getAdaptiveMax(range);
+    const poolSize = selectedTable === 0 ? aMax * aMax : aMax;
+
+    // Keep at most ~60 % of the pool in history so there's always fresh headroom.
+    const historyLimit = Math.max(1, Math.floor(poolSize * 0.6));
+
     let q, attempts = 0;
     do {
         q = buildQuestion(mode, selectedTable, range);
         attempts++;
-    } while (attempts < 10 && q.display === lastQuestionDisplay);
+    } while (attempts < 25 && recentQuestions.includes(q.display));
 
-    currentQuestion      = q;
-    lastQuestionDisplay  = q.display;
+    // Add to rolling history, drop oldest entry when over limit.
+    recentQuestions.push(q.display);
+    if (recentQuestions.length > historyLimit) recentQuestions.shift();
+
+    currentQuestion        = q;
     questionEl.textContent = q.display;
 
     // pop-in animation
@@ -594,6 +615,7 @@ function resetGame() {
     totalCorrect  = 0;
     lastMilestone = 0;
     achievementsShown.clear();
+    recentQuestions = [];
     clearInterval(timerInterval);
     gameActive    = true;
 
@@ -733,13 +755,18 @@ languageSelect.addEventListener('change', e => {
     updateLanguage();
 });
 
-practiceModeSelect.addEventListener('change', () => generateQuestion());
+practiceModeSelect.addEventListener('change', () => {
+    recentQuestions = [];
+    generateQuestion();
+});
 
 timesTableSelect.addEventListener('change', () => {
+    recentQuestions = [];
     if (submitBtn.style.display !== 'none' || inputModeSelect.value === 'choice') generateQuestion();
 });
 
 difficultySelect.addEventListener('change', () => {
+    recentQuestions = [];
     updateLanguage();   // rebuilds table options for new range
     generateQuestion();
 });
