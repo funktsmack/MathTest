@@ -230,8 +230,10 @@ function getRange() {
     return d === 'easy' ? 5 : d === 'hard' ? 12 : 10;
 }
 
-function rand(max) {
-    return Math.floor(Math.random() * max) + 1;
+// skew < 1 biases the pick toward the top of the range (near max);
+// skew === 1 is a plain uniform 1..max pick.
+function rand(max, skew = 1) {
+    return Math.min(max, Math.floor(Math.pow(Math.random(), skew) * max) + 1);
 }
 
 function getStreakEmoji(s) {
@@ -253,6 +255,15 @@ function getAdaptiveMax(range) {
     return Math.min(range, expanded);
 }
 
+// As totalCorrect grows, bias operand picks toward the top of the
+// currently-unlocked range (e.g. 5-9) instead of sampling it uniformly,
+// so newly-unlocked harder numbers actually get practiced more than the
+// ones already mastered. Eases from uniform (1) down to a strong top-end
+// bias (0.45) over the first ~30 correct answers.
+function getSkew() {
+    return Math.max(0.45, 1 - totalCorrect / 30);
+}
+
 // ============================================================
 // QUESTION GENERATION
 // ============================================================
@@ -265,25 +276,26 @@ function getEffectiveMode() {
 
 function buildQuestion(mode, selectedTable, range) {
     const aMax = getAdaptiveMax(range);   // grows with totalCorrect
+    const skew = getSkew();               // biases toward the top of aMax
 
     if (mode === 'multiplication') {
-        const a = rand(aMax);
-        const b = selectedTable === 0 ? rand(aMax) : selectedTable;
+        const a = rand(aMax, skew);
+        const b = selectedTable === 0 ? rand(aMax, skew) : selectedTable;
         return { answer: a * b, display: `${a} × ${b} = ?` };
     }
     if (mode === 'division') {
-        const divisor  = selectedTable === 0 ? rand(aMax) : selectedTable;
-        const quotient = rand(aMax);
+        const divisor  = selectedTable === 0 ? rand(aMax, skew) : selectedTable;
+        const quotient = rand(aMax, skew);
         return { answer: quotient, display: `${divisor * quotient} ÷ ${divisor} = ?` };
     }
     if (mode === 'addition') {
-        const a = rand(aMax);
-        const b = selectedTable === 0 ? rand(aMax) : selectedTable;
+        const a = rand(aMax, skew);
+        const b = selectedTable === 0 ? rand(aMax, skew) : selectedTable;
         return { answer: a + b, display: `${a} + ${b} = ?` };
     }
     // subtraction — ensure non-negative result
-    const b = selectedTable === 0 ? rand(aMax) : selectedTable;
-    const a = b + rand(aMax);   // a >= b+1, so result >= 1
+    const b = selectedTable === 0 ? rand(aMax, skew) : selectedTable;
+    const a = b + rand(aMax, skew);   // a >= b+1, so result >= 1
     return { answer: a - b, display: `${a} − ${b} = ?` };
 }
 
