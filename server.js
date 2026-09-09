@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
@@ -17,14 +18,10 @@ app.use(limiter);
 // Disable XSS protection for this simple app since we're not using forms
 app.use(helmet.xssFilter({ setOnOldIE: true }));
 
-// Serve static files from the current directory
-app.use(express.static('./', {
-    // Prevent directory listing
-    setHeaders: (res, path) => {
-        if (path.endsWith('/')) {
-            res.setHeader('X-Content-Type-Options', 'nosniff');
-        }
-    }
+// Serve only the public/ directory — never the project root, which
+// contains server.js, package.json, and .git (source/history disclosure).
+app.use(express.static(path.join(__dirname, 'public'), {
+    dotfiles: 'deny'
 }));
 
 // Basic error handling
