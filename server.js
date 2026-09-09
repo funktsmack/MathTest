@@ -18,11 +18,27 @@ app.use(limiter);
 // Disable XSS protection for this simple app since we're not using forms
 app.use(helmet.xssFilter({ setOnOldIE: true }));
 
-// Serve only the public/ directory — never the project root, which
-// contains server.js, package.json, and .git (source/history disclosure).
-app.use(express.static(path.join(__dirname, 'public'), {
-    dotfiles: 'deny'
-}));
+// The site's HTML/CSS/JS must stay at the repo root — GitHub Pages serves
+// this same root directly and only looks for index.html there. So instead
+// of restricting express.static to a subfolder, allowlist exactly the
+// client files this server should hand out, which keeps server.js,
+// package.json, package-lock.json, and .git unreachable over HTTP.
+const ALLOWED_FILES = new Set([
+    'index.html',
+    'styles.css',
+    'script.js',
+    'manifest.json',
+    'icon-192x192.png',
+    'icon-512x512.png'
+]);
+
+app.use((req, res, next) => {
+    const filename = req.path === '/' ? 'index.html' : req.path.replace(/^\//, '');
+    if (!ALLOWED_FILES.has(filename)) return res.status(404).end();
+    next();
+});
+
+app.use(express.static(__dirname, { dotfiles: 'deny' }));
 
 // Basic error handling
 app.use((err, req, res, next) => {
